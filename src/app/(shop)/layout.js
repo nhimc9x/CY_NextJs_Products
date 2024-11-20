@@ -1,11 +1,9 @@
 import DefaultLayout from '@/app/layouts/DefaultLayout'
 
-const HomePage = () => {
+export default function layout({children}) {
     return (
         <DefaultLayout>
-            <div className="">Home Page</div>
+            {children}
         </DefaultLayout>
     )
 }
-
-export default HomePage
