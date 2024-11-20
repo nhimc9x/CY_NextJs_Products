@@ -1,11 +1,16 @@
-import { NextResponse } from 'next/server'
+import {NextResponse} from 'next/server'
+import {getCookie} from "cookies-next";
+// import {getCookieServer} from "@/utils/getCookieServer";
 
-// This function can be marked `async` if using `await` inside
-export function middleware(request) {
-    return NextResponse.redirect(new URL('/home', request.url))
+export async function middleware(request) {
+    const token = await getCookie('token', { req: request });
+    // const token = await getCookieServer('token')
+    if (token) {
+        return NextResponse.next()
+    }
+    return NextResponse.redirect(new URL('/login', request.url))
 }
 
-// See "Matching Paths" below to learn more
 export const config = {
-    matcher: '/about/:path*',
+    matcher: ['/cart', '/checkout', '/order', '/products/:path*'],
 }

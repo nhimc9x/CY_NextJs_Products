@@ -10,14 +10,17 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        'montserrat': ['Montserrat', 'sans-serif'],
+      },
       screens: {
         'xs': '475px',
       },
       colors: {
-        'primary': '#ff922c',
-        'primary-light': '#ffeede',
-        'secondary': '#54bf29',
-        'secondary-light': '#eaffe2',
+        'primary': '#FF1493',
+        'secondary': '#111111',
+        'holographic': '#C0C0C0',
+        'lavender': '#C0C0C0',
         'text-primary': '#333333',
       },
     },

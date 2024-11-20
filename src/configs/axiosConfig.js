@@ -1,15 +1,20 @@
 import axios from 'axios';
-import { getCookie} from "cookies-next";
+import {getCookie} from "cookies-next";
+import {toast} from "react-toastify";
+import {getCookieServer} from "@/utils/getCookieServer";
+import isServerSide from "@/utils/isServerSide";
 
 const API_URL = 'http://152.42.240.131/api/v1'
 const axiosInstance = axios.create({
     baseURL: API_URL,
+    headers: {
+        "Content-Type": "application/json",
+    },
     timeout: 10000,
 });
 
-axiosInstance.interceptors.request.use(function (config) {
-    const token = getCookie('token')
-    console.log('token: ', token)
+axiosInstance.interceptors.request.use(async function (config) {
+    const token = isServerSide() ? await getCookieServer('token') : getCookie('token')
     if (token) {
         config.headers["Authorization"] = `Bearer ${token}`
     }
@@ -18,14 +23,10 @@ axiosInstance.interceptors.request.use(function (config) {
     return Promise.reject(error);
 });
 
-// Add a response interceptor
 axiosInstance.interceptors.response.use(function (response) {
-    // Any status code that lie within the range of 2xx cause this function to trigger
-    // Do something with response data
     return response;
 }, function (error) {
-    // Any status codes that falls outside the range of 2xx cause this function to trigger
-    // Do something with response error
+    if (typeof window !== 'undefined') toast.error(error.response?.data?.message)
     return Promise.reject(error);
 });
 

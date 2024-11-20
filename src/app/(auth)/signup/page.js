@@ -4,9 +4,12 @@ import Link from "next/link";
 import ButtonForm from "@/app/(auth)/components/ButtonForm";
 import InputForm from "@/app/(auth)/components/InputForm";
 import {useState} from "react";
-import {signup} from "@/services/authService";
+import {signup} from "@/services/authServices";
+import {toast} from "react-toastify";
+import {useRouter} from "next/navigation";
 
 export default function SignUpPage() {
+    const router = useRouter()
 
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
@@ -14,9 +17,13 @@ export default function SignUpPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        console.log('submit')
-        const res = await signup(username, email, password)
-        console.log('res: ', res)
+        try {
+            await signup(username, email, password)
+            toast.success('Signup success, please login')
+            await router.push('/login')
+        } catch (error) {
+            console.log('error: ', error)
+        }
     }
 
     return (

@@ -1,7 +1,7 @@
-import {GET, POST} from "@/services/apiService";
+import {GET, POST} from "@/services/apiServices";
 
 export const login = async (email, password) => {
-    return await GET('/login', {
+    return await POST('/login', {
         email,
         password,
     })
@@ -20,6 +20,6 @@ export const logout = async () => {
     return await POST('/logout')
 }
 
-export const getUser = async () => {
+export const checkAuth = async () => {
     return await POST('/user')
 }
