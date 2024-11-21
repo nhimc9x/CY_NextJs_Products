@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 html {
-    @apply font-montserrat sm:text-[16px] text-[14px];
+    @apply font-montserrat font-medium sm:text-[16px] text-[14px];
 }
 
 .wrapper {

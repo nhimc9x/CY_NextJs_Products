@@ -1,4 +1,22 @@
+"use client"
+
+import useCartStore from "@/stores/useCartStore";
+
 export default function ProductCard({product}) {
+
+    const {addToCart} = useCartStore()
+
+    const handleAddToCart = () => {
+        addToCart({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            stock: product.stock,
+            image: product.preview_img_path,
+            quantity: 1,
+        })
+    }
+
     return (
         <div className="relative flex flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md py-4 border border-gray-100">
             <div className="relative mx-4 h-40 overflow-hidden rounded-xl bg-blue-gray-500 bg-clip-border text-white shadow-lg shadow-blue-gray-500/40 bg-gradient-to-r from-blue-500 to-blue-600">
@@ -13,7 +31,10 @@ export default function ProductCard({product}) {
                 </div>
             </div>
             <div className="p-6 pt-0">
-                <button type="button" className="select-none rounded-lg bg-blue-500 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
+                <button
+                    onClick={handleAddToCart}
+                    type="button"
+                    className="select-none rounded-lg bg-blue-500 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
                     Add to card
                 </button>
             </div>

@@ -21,5 +21,5 @@ export const logout = async () => {
 }
 
 export const checkAuth = async () => {
-    return await POST('/user')
+    return await GET('/user')
 }

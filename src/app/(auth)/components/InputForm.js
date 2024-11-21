@@ -1,7 +1,8 @@
-export default function InputForm({value, setValue, placeholder, type}) {
+export default function InputForm({value, setValue, placeholder, type, required}) {
     return (
         <div className="pb-4">
             <input
+                required={required}
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
                 type={type || 'text'}

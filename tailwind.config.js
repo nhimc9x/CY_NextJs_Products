@@ -18,7 +18,8 @@ module.exports = {
       },
       colors: {
         'primary': '#FF1493',
-        'secondary': '#111111',
+        'secondary': '#1b1b19',
+        'tertiary': '#242422',
         'holographic': '#C0C0C0',
         'lavender': '#C0C0C0',
         'text-primary': '#333333',
