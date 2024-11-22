@@ -7,9 +7,11 @@ import OrderItemCard from "@/app/(shop)/orders/components/OrderItemCard";
 export default function OrdersPage() {
 
     const [orders, setOrders] = useState([])
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         (async () => {
+            setLoading(true)
             try {
                 const res = await getOrders()
                 console.log(res)
@@ -17,16 +19,21 @@ export default function OrdersPage() {
             } catch (error) {
                 console.log(error)
             }
+            setLoading(false)
         })()
     }, [])
 
+    if (loading) return <div className="text-center text-holographic min-h-[400px] grid place-content-center text-3xl py-8">Loading...</div>
 
     return (
         <>
-            <div className="">Orders</div>
-            <div className="my-10">
+            <div className="py-10 px-4">
                 {
-                    orders?.map(order => <OrderItemCard key={order.id} orderData={order}/>)
+                    orders?.length === 0 ? <div
+                            className="text-center text-holographic min-h-[400px] grid place-content-center text-3xl py-8">Your
+                            orders is empty</div> :
+                        orders?.map(order => <OrderItemCard key={order.id} orderData={order}/>)
+
                 }
             </div>
 

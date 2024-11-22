@@ -1,14 +1,16 @@
-import Link from "next/link";
 import {useState} from "react";
 import {toast} from "react-toastify";
+import {RiDeleteBackFill} from "react-icons/ri";
+import formatMoney from "@/utils/formatMoney";
+import useCartStore from "@/stores/useCartStore";
 
 export default function CartItem({cartData}) {
-
-    const [quantity, setQuantity] = useState(cartData.quantity)
+    const {plusQuantity, minusQuantity, getQuantity, removeFromCart} = useCartStore()
+    const quantity = getQuantity(cartData.id)
 
     const handleMinus = () => {
         if (quantity <= 1) return
-        setQuantity(quantity - 1)
+        minusQuantity(cartData.id)
     }
 
     const handlePlus = () => {
@@ -16,47 +18,45 @@ export default function CartItem({cartData}) {
             toast.error('Out of stock')
             return
         }
-        setQuantity(quantity + 1)
+        plusQuantity(cartData.id)
+    }
+
+    const handleRemove = () => {
+        removeFromCart(cartData.id)
     }
 
     return (
         <div
-            className="rounded-xl border border-secondary/40 p-4 lg:p-8 grid grid-cols-12 mb-4 max-lg:max-w-lg max-lg:mx-auto gap-y-4 ">
-            <div className="col-span-12 lg:col-span-2">
+            className="rounded-xl bg-text-primary h-max p-10 lg:p-4 grid grid-cols-12 max-lg:max-w-lg max-lg:mx-auto gap-y-4 text-holographic">
+            <div className="col-span-12 lg:col-span-4">
                 <img
-                    src="https://img.freepik.com/free-vector/realistic-ad-with-product-landing-page_52683-70870.jpg"
+                    src={cartData.image}
                     alt=""
-                    className="max-lg:w-full lg:w-[180px] h-full rounded-lg object-cover"
+                    className="h-full w-full rounded-lg object-cover"
                 />
             </div>
-            <div className="col-span-12 lg:col-span-10 detail w-full lg:pl-3">
+            <div className="col-span-12 lg:col-span-8 detail w-full lg:pl-3">
                 <div className="flex items-center justify-between w-full mb-4">
-                    <h5 className="font-semibold text-2xl leading-9 text-left line-clamp-2 text-secondary">{cartData.name}</h5>
+                    <h5 className="font-semibold text-xl leading-9 text-left line-clamp-2 text-holographic">{cartData.name}</h5>
                     <button
-                        className="rounded-full flex-shrink-0 size-10 p-2.5 group flex items-center justify-center
-                    hover:bg-red-200">
-                        delete
-                        {/*<TrashIcon className="size-full text-[#EF4444]"/>*/}
+                        onClick={handleRemove}
+                        className="rounded-full flex-shrink-0 size-12 p-2.5 group flex items-center justify-center
+                    hover:bg-holographic">
+                        <RiDeleteBackFill className="size-full text-red-500"/>
                     </button>
                 </div>
                 <div className="flex gap-4 mb-6">
                     <div
-                        className="text-gray-400 grid place-content-center border border-secondary rounded-sm px-4 font-medium uppercase text-sm">
+                        className="text-gray-400 grid place-content-center border border-gray-500 rounded px-4 py-2 font-medium uppercase text-sm">
                         In Stock: {cartData.stock}<span className="text-secondary"></span></div>
-                    <Link href={'/products'}>
-                        <button
-                            className="max-w-[180px] min-w-[140px] text-base">
-                            See details
-                        </button>
-                    </Link>
                 </div>
                 <div className="flex justify-between items-center">
                     <div className="flex items-center gap-4">
                         <button
                             onClick={handleMinus}
-                            className="group rounded-[50px] border border-gray-200 shadow-sm shadow-transparent p-2.5 flex
+                            className="group rounded-[50px] border border-gray-500 shadow-sm shadow-transparent p-2.5 flex
                     items-center
-                    justify-center bg-white transition-all duration-500 hover:shadow-gray-200 hover:bg-gray-50
+                    justify-center bg-gray-400 transition-all duration-500 hover:shadow-gray-200 hover:bg-gray-50
                     hover:border-gray-300 focus-within:outline-gray-300">
                             <svg className="stroke-gray-900 transition-all duration-500 group-hover:stroke-black"
                                  width="18" height="19" viewBox="0 0 18 19" fill="none"
@@ -68,13 +68,13 @@ export default function CartItem({cartData}) {
                         <input type="text"
                                readOnly
                                value={quantity}
-                               className="border border-gray-300 rounded-full w-10 aspect-square outline-none text-gray-900 font-semibold text-sm py-1.5 px-2 bg-gray-200 text-center"
+                               className="border border-gray-500 rounded-full w-10 aspect-square outline-none text-gray-900 font-semibold text-sm py-1.5 px-2 bg-gray-300 text-center"
                                placeholder="1"/>
                         <button
                             onClick={handlePlus}
-                            className="group rounded-[50px] border border-gray-200 shadow-sm shadow-transparent p-2.5 flex
+                            className="group rounded-[50px] border border-gray-600 shadow-sm shadow-transparent p-2.5 flex
                     items-center
-                    justify-center bg-white transition-all duration-500 hover:shadow-gray-200 hover:bg-gray-50
+                    justify-center bg-gray-400 transition-all duration-500 hover:shadow-gray-200 hover:bg-gray-50
                     hover:border-gray-300 focus-within:outline-gray-300">
                             <svg className="stroke-gray-900 transition-all duration-500 group-hover:stroke-black"
                                  width="18" height="19" viewBox="0 0 18 19" fill="none"
@@ -84,7 +84,7 @@ export default function CartItem({cartData}) {
                             </svg>
                         </button>
                     </div>
-                    <h6 className="text-secondary font-bold text-xl tracking-wider leading-9 text-right">${cartData.price}</h6>
+                    <h6 className="text-primary font-bold text-lg tracking-wider leading-9 text-right">{formatMoney(quantity * cartData.price)}</h6>
                 </div>
             </div>
         </div>
