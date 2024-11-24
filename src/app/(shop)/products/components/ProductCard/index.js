@@ -1,5 +1,3 @@
-"use client"
-
 import useCartStore from "@/stores/useCartStore"
 import formatMoney from "@/utils/formatMoney";
 

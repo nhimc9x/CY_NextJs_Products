@@ -5,17 +5,37 @@ import useCartStore from "@/stores/useCartStore";
 import Link from "next/link";
 import {useAutoAnimate} from '@formkit/auto-animate/react'
 import formatMoney from "@/utils/formatMoney";
+import {useEffect, useState} from "react";
+import LoadingSpin from "@/app/components/LoadingSpin";
 
 export default function CartPage() {
 
     const {cart, getTotalPrice} = useCartStore()
-    
+    const [isLoading, setIsLoading] = useState(true)
+
+    useEffect(() => {
+        setIsLoading(false)
+    }, [cart])
+
     const [parent, enableAnimations] = useAutoAnimate({
         duration: 400,
         easing: 'ease-in-out',
     })
 
-    if (!cart.length) return <div className="text-center text-holographic min-h-[400px] grid place-content-center text-3xl py-8">Your cart is empty</div>
+    if (!cart.length) return <div
+        className="text-center text-holographic min-h-[500px] grid place-content-center text-3xl py-8 space-y-6">
+        {
+            !isLoading ? (
+                <>
+                    <img className="w-72 pl-8" src={'https://www.pngarts.com/files/12/Khaby-Lame-PNG-Image.png'}
+                         alt="cart-empty"/>
+                    <div className="text-2xl">Your cart is empty</div>
+                </>
+            ) : (
+                <LoadingSpin/>
+            )
+        }
+    </div>
 
     return (
         <div className='px-4 py-10'>

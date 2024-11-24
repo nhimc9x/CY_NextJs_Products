@@ -3,6 +3,7 @@
 import {useEffect, useState} from "react";
 import {getOrders} from "@/services/productServices";
 import OrderItemCard from "@/app/(shop)/orders/components/OrderItemCard";
+import LoadingSpin from "@/app/components/LoadingSpin";
 
 export default function OrdersPage() {
 
@@ -23,7 +24,7 @@ export default function OrdersPage() {
         })()
     }, [])
 
-    if (loading) return <div className="text-center text-holographic min-h-[400px] grid place-content-center text-3xl py-8">Loading...</div>
+    if (loading) return <div className="text-center text-holographic min-h-[500px] grid place-content-center text-3xl py-8"><LoadingSpin/></div>
 
     return (
         <>

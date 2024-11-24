@@ -1,18 +1,21 @@
-import ProductCard from "@/app/(shop)/products/components/ProductCard";
 import {getProducts} from "@/services/productServices";
+import ProductList from "@/app/(shop)/products/components/ProductList";
 
-export default async function ProductsPage() {
-    let products = await getProducts()
+export default async function ProductsPage({searchParams}) {
+    const query = {}
+    if (searchParams.name) query.name = searchParams.name
+    if (searchParams.min_price) query.min_price = searchParams.min_price
+    if (searchParams.max_price) query.max_price = searchParams.max_price
+    if (searchParams.category_id) query.category_id = searchParams.category_id
+
+    let products = await getProducts(1, query)
+
     return (
         <div className="py-10">
             <div className="text-center text-3xl py-8 text-holographic font-semibold tracking-wider">Products</div>
-            {!products.data.data.length ? <div className="text-center text-3xl py-8">No products</div> : (
-                <div className="px-10 py-16 grid grid-cols-3 gap-6">
-                    {products.data.data.map((product, index) => (
-                        <ProductCard key={index} product={product}/>
-                    ))}
-                </div>
-            )}
+            {
+                <ProductList initialProducts={products?.data?.data} query={query} last_page={products?.data?.last_page}/>
+            }
         </div>
     )
 }

@@ -5,12 +5,13 @@ import ButtonForm from "@/app/(auth)/components/ButtonForm";
 import Link from "next/link";
 import {useState} from "react";
 import {login} from "@/services/authServices";
-import {useRouter} from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
 import {toast} from "react-toastify";
 import useAuthStore from "@/stores/useAuthStore";
 
 export default function LoginPage() {
     const router = useRouter()
+    const searchParams = useSearchParams()
     const authStore = useAuthStore()
 
     const [email, setEmail] = useState('')
@@ -19,6 +20,7 @@ export default function LoginPage() {
     const handleSubmit = async (e) => {
         e.preventDefault()
         try {
+            const redirectTo = searchParams.get('redirect') ?? '/'
             const res = await login(email, password)
             console.log('res: ', res.data.user.name)
             toast.success(`Login success, welcome ${res.data.user.name}`)
@@ -26,7 +28,7 @@ export default function LoginPage() {
                 maxAge: 60 * 60 * 24 * 7,
             })
             authStore.setUser(res.data.user)
-            await router.push('/')
+            await router.push(redirectTo)
         } catch (error) {
             console.log('error: ', error)
         }

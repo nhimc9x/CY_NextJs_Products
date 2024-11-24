@@ -1,6 +1,6 @@
 "use client"
 
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import useCartStore from "@/stores/useCartStore";
 import {checkout} from "@/services/productServices";
 import {toast} from "react-toastify";
@@ -8,17 +8,22 @@ import {useRouter} from "next/navigation";
 import {useAutoAnimate} from '@formkit/auto-animate/react'
 import Link from "next/link";
 import formatMoney from "@/utils/formatMoney";
+import LoadingSpin from "@/app/components/LoadingSpin";
 
 export default function CheckoutPage() {
     const router = useRouter()
     const {cart, clearCart} = useCartStore()
     const totalPrice = useCartStore(state => state?.getTotalPrice())
-
     const [parent, enableAnimations] = useAutoAnimate()
 
+    const [loading, setLoading] = useState(true)
     const [address, setAddress] = useState('')
     const [phone, setPhone] = useState('')
     const [paymentMethod, setPaymentMethod] = useState('visa')
+
+    useEffect(() => {
+        setLoading(false)
+    }, [cart])
 
     const handleCheckout = async (e) => {
         e.preventDefault()
@@ -29,18 +34,30 @@ export default function CheckoutPage() {
             name: item.name,
         }))
         try {
+            setLoading(true)
             const res = await checkout(address, phone, handleCardBeforeCheckout)
             router.push('/orders')
             toast.success(res.data.message)
-            clearCart()
+            setLoading(false)
+            setTimeout(() => {
+                clearCart()
+            }, 1000)
         } catch (error) {
             console.log(error)
         }
     }
 
-    if (!cart.length) return <div
-        className="text-center text-holographic min-h-[400px] grid place-content-center text-3xl py-8">Your cart is
-        empty</div>
+    useEffect(() => {
+        if (!loading && !cart.length) {
+            router.push('/cart')
+        }
+    }, [cart, loading])
+
+    if (loading) return (
+        <div className="text-center text-holographic min-h-[500px] grid place-content-center text-3xl py-8">
+            <LoadingSpin/>
+        </div>
+    )
 
     return (
         <div className="text-holographic pb-20">
@@ -136,7 +153,7 @@ export default function CheckoutPage() {
 
                             <div className="flex flex-wrap gap-4 mt-12">
                                 <Link href={'/cart'}
-                                    className="min-w-[150px] text-center px-6 py-3.5 bg-text-primary/40 hover:bg-text-primary rounded-md">
+                                      className="min-w-[150px] text-center px-6 py-3.5 bg-text-primary/40 hover:bg-text-primary rounded-md">
                                     Back
                                 </Link>
                                 <button type="submit"
@@ -147,7 +164,8 @@ export default function CheckoutPage() {
                         </form>
                     </div>
 
-                    <div className="bg-text-primary border-4 border-holographic/30 border-dotted min-h-96 w-full  p-6 rounded-md">
+                    <div
+                        className="bg-text-primary border-4 border-holographic/30 border-dotted min-h-96 w-full  p-6 rounded-md">
                         <h2 className="text-4xl text-gray-200">{formatMoney(totalPrice * 1.1)}</h2>
                         <div className=" mt-8 space-y-4">
                             <div className="flex flex-wrap gap-4 text-sm">Price <span

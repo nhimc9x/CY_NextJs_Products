@@ -6,6 +6,7 @@ const useAuthStore = create(set => ({
         token: getCookie('token') || null,
     
         setUser: (user) => set({user}),
+        clearStore: () => set({user: null, token: null}),
     })
 )
 

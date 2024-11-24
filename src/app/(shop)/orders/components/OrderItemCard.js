@@ -6,7 +6,7 @@ export default function OrderItemCard({orderData}) {
 
     const [showDetails, setShowDetails] = useState(false)
     const [parent, enableAnimations] = useAutoAnimate({
-        duration: 400,
+        duration: 300,
         easing: 'ease-in-out',
     })
 
@@ -48,10 +48,10 @@ export default function OrderItemCard({orderData}) {
                 showDetails && (
                     <div className="w-full bg-text-primary rounded-md text-gray-400">
                         {orderData.order_items.map(item =>
-                            <div key={item.id} className="grid grid-cols-5 items-center gap-4 p-4">
-                                <div className="lg:col-span-2 col-span-5">{item.name}</div>
-                                <div className="text-text-primary">$ {item.price}</div>
-                                <div className="text-text-primary">x {item.quantity}</div>
+                            <div key={item.id} className="grid grid-cols-6 items-center gap-4 p-4">
+                                <div className="lg:col-span-3 col-span-6">{item.name}</div>
+                                <div className="text-holographic">$ {item.price}</div>
+                                <div className="text-holographic">x {item.quantity}</div>
                                 <div
                                     className="font-semibold text-primary/70 lg:col-span-1 col-span-3 text-left lg:text-right">$ {item.total}</div>
                             </div>
